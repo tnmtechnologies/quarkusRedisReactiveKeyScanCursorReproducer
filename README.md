@@ -8,6 +8,9 @@ In parallel to the tests, we can run a redis [MONITOR command](https://redis.io/
 In any test case, the output shows a scan command or a smembers command depending on the request URL.
 
 
+redis instance is redis:7.2.1-alpine.
+
+
 ## JVM mode/quarkus:dev
 
 In JVM mode and in quarkus:dev mode, application behaves as expected. It serves the expected response.
@@ -157,4 +160,59 @@ In both cases, the exception at server side is:
         at org.graalvm.nativeimage.builder/com.oracle.svm.core.posix.thread.PosixPlatformThreads.pthreadStartRoutine(PosixPlatformThreads.java:210)
 ```
 
+
+## Redis provisioning
+
+Here is an example of provisioning.<br />
+Store a record with a key 0 and value "toto" and of type x.
+
+The redis commands are:
+
+```
+set id:0 "toto"
+sadd type:x 0
+```
+
+
+Then run the curl commands. The responses will be:
+
+```
+curl -v http://127.0.0.1:8080/api/ids
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying 127.0.0.1:8080...
+* Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+> GET /api/ids HTTP/1.1
+> Host: 127.0.0.1:8080
+> User-Agent: curl/7.88.1
+> Accept: */*
+>
+< HTTP/1.1 200 OK
+< content-length: 19
+< Content-Type: application/json;charset=UTF-8
+<
+{ [19 bytes data]
+100    19  100    19    0     0   1304      0 --:--:-- --:--:-- --:--:--  1357[{"href":"/api/0"}]
+* Connection #0 to host 127.0.0.1 left intact
+```
+
+```
+curl -v http://127.0.0.1:8080/api/ids?type=x
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying 127.0.0.1:8080...
+* Connected to 127.0.0.1 (127.0.0.1) port 8080 (#0)
+> GET /api/ids?type=x HTTP/1.1
+> Host: 127.0.0.1:8080
+> User-Agent: curl/7.88.1
+> Accept: */*
+>
+< HTTP/1.1 200 OK
+< content-length: 19
+< Content-Type: application/json;charset=UTF-8
+<
+{ [19 bytes data]
+100    19  100    19    0     0     47      0 --:--:-- --:--:-- --:--:--    47[{"href":"/api/0"}]
+* Connection #0 to host 127.0.0.1 left intact
+```
 
