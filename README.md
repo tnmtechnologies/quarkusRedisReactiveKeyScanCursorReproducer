@@ -131,7 +131,7 @@ curl -v http://127.0.0.1:8080/api/ids?type=x
 
 
 
-In both cases, the server exception is:
+In both cases, the exception at server side is:
 
 ```
 2023-10-06 17:19:26,422 ERROR [io.qua.ver.htt.run.QuarkusErrorHandler] (vert.x-eventloop-thread-2) HTTP Request to /api/ids failed, error id: ffe1f213-af0b-4af1-b842-537dbafcc865-1: (TIMEOUT,-1) Timed out after waiting 30000(ms) for a reply. address: __vertx.reply.1, repliedAddress: getIds
